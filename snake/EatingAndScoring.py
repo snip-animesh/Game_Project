@@ -92,6 +92,17 @@ class Game:
         self.snake.draw()
         self.apple = Apple(self.screen)
         self.apple.draw()
+        # Bounding Keystroke
+        self.right = True
+        self.left = False
+        self.up = True
+        self.down = True
+
+    def bounding_keystroke(self, right, left, up, down):
+        self.right = right
+        self.left = left
+        self.up = up
+        self.down = down
 
     def play(self):
         self.render_background()
@@ -99,6 +110,9 @@ class Game:
         self.apple.draw()
         self.show_score()
         pygame.display.flip()
+        if self.bounding_snake():
+            self.play_music('resources/crash.mp3')
+            raise "Sanke is outside boundary ! Game over!"
         # snake colliding with apple
         if self.is_collision(self.snake.block_x[0], self.snake.block_y[0], self.apple.x, self.apple.y):
             self.apple.move()
@@ -124,16 +138,17 @@ class Game:
 
     def game_over(self):
         # self.render_background()
-        font = pygame.font.Font('resources/samuf.ttf', 32)
+        font = pygame.font.Font('resources/samuf.ttf', 64)
         line1 = font.render("Your Game is Over. Score is : " + str(self.snake.length - 1), True, (255, 255, 255))
-        self.screen.blit(line1, (100, 400))
+        self.screen.blit(line1, (300, 300))
         line2 = font.render("To play again hit Enter or ESC to exit ", True, (255, 255, 255))
-        self.screen.blit(line2, (100, 500))
+        self.screen.blit(line2, (300, 400))
         pygame.display.flip()
 
     def reset(self):
         self.snake = Snake(self.screen, 1)
         self.apple = Apple(self.screen)
+        self.pause = False
 
     def play_music(self, source):
         music = mixer.Sound(source)
@@ -141,7 +156,14 @@ class Game:
 
     def render_background(self):
         BACKGROUND = pygame.image.load('resources/bg.jpg')
-        self.screen.blit(BACKGROUND, (0, -10))
+        self.screen.blit(BACKGROUND, (0, 0))
+
+    def bounding_snake(self):
+        # Don't allow the snake outside of frame
+        x = self.snake.block_x[0]
+        y = self.snake.block_y[0]
+        if x > 1200 or x < 0 or y > 800 or y < 0:
+            return True
 
     def run(self):
         running = True
@@ -163,14 +185,18 @@ class Game:
                     if not pause:
                         if event.key == pygame.K_ESCAPE:
                             running = False
-                        if event.key == pygame.K_RIGHT:
+                        if self.right == True and event.key == pygame.K_RIGHT:
                             self.snake.move_right()
-                        if event.key == pygame.K_LEFT:
+                            self.bounding_keystroke(True, False, True, True)
+                        if self.left == True and event.key == pygame.K_LEFT:
                             self.snake.move_left()
-                        if event.key == pygame.K_UP:
+                            self.bounding_keystroke(False, True, True, True)
+                        if self.up == True and event.key == pygame.K_UP:
                             self.snake.move_up()
-                        if event.key == pygame.K_DOWN:
+                            self.bounding_keystroke(True, True, True, False)
+                        if self.down == True and event.key == pygame.K_DOWN:
                             self.snake.move_down()
+                            self.bounding_keystroke(True, True, False, True)
             try:
                 if not pause:
                     self.play()
@@ -181,7 +207,7 @@ class Game:
                 # Pausing the music when snake is crashed
                 pygame.mixer.music.pause()
 
-            time.sleep(0.3)
+            time.sleep(0.1)
 
         pygame.quit()
 
