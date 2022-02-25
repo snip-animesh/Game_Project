@@ -120,7 +120,7 @@ class Game:
     def show_score(self):
         font = pygame.font.Font('resources/samuf.ttf', 32)
         score = font.render("Score : " + str(self.snake.length - 1), True, (255, 255, 255))
-        self.screen.blit(score, (1100, 5))
+        self.screen.blit(score, (1080, 5))
 
     def game_over(self):
         # self.render_background()
@@ -140,8 +140,8 @@ class Game:
         music.play()
 
     def render_background(self):
-        BACKGROUND = pygame.image.load('resources/background.jpg')
-        self.screen.blit(BACKGROUND, (0, 0))
+        BACKGROUND = pygame.image.load('resources/bg.jpg')
+        self.screen.blit(BACKGROUND, (0, -10))
 
     def run(self):
         running = True
