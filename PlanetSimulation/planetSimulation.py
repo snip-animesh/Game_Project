@@ -10,7 +10,7 @@ BLUE = (100, 149, 237)
 RED = (188, 39, 50)
 DARK_GREY = (80, 78, 81)
 FONT = pygame.font.Font('resources/samuf.ttf', 16)
-ICON=pygame.image.load('resources/planet.png')
+ICON = pygame.image.load('resources/planet.png')
 pygame.display.set_icon(ICON)
 
 
@@ -45,8 +45,9 @@ class Planet:
                 y = y * self.SCALE + WIDTH / 2
                 updated_points.append((x, y))
             pygame.draw.lines(screen, self.color, False, updated_points, 2)
+            pygame.draw.line(screen, self.color, (WIDTH / 2, HEIGHT / 2), (x, y), 1)
         pygame.draw.circle(screen, self.color, (x, y), self.radius)
-        
+
         if not self.sun:
             distance_text = FONT.render(f'{round(self.distance_to_sun / 1000, 1)} km', True, WHITE)
             screen.blit(distance_text, (x - distance_text.get_width() / 2, y - distance_text.get_height() / 32))
