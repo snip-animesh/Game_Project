@@ -32,17 +32,32 @@ class Paddle:
             self.y += self.VEL
 
 
+class Ball:
+    NAX_VEL = 5
+    COLOR = WHITE
+
+    def __init__(self, x, y, radius):
+        self.x = x
+        self.y = y
+        self.radius = radius
+        self.x_vel = self.NAX_VEL
+        self.y_vel = 0
+
+    def draw(self, win):
+        pygame.draw.circle(win, self.COLOR, (self.x, self.y), self.radius)
+
+
 def draw(win, paddles):
     win.fill(BLACK)
 
     for paddle in paddles:
         paddle.draw(win)
 
-    for i in range(7,HEIGHT,HEIGHT//20):
-        if i%2==0:
+    for i in range(7, HEIGHT, HEIGHT // 20):
+        if i % 2 == 0:
             continue
 
-        pygame.draw.rect(win,WHITE,(WIDTH//2-5,i,10,HEIGHT//20))
+        pygame.draw.rect(win, WHITE, (WIDTH // 2 - 5, i, 10, HEIGHT // 20))
     pygame.display.update()
 
 
